@@ -4,6 +4,8 @@ import (
 	"errors"
 	"strings"
 	"time"
+
+	"github.com/badoux/checkmail"
 )
 
 // User represents the user's model
@@ -35,6 +37,9 @@ func (user *User) validate(step string) error {
 	}
 	if user.Email == "" {
 		return errors.New(`The field 'email' is mandatory`)
+	}
+	if err := checkmail.ValidateFormat(user.Email); err != nil {
+		return errors.New(`The email sent is invalid`)
 	}
 	if step == "REGISTRATION" && user.Password == "" {
 		return errors.New(`The field 'password' is mandatory`)
