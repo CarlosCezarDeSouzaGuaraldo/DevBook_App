@@ -14,5 +14,5 @@ func main() {
 	r := router.Generate()
 
 	fmt.Printf("API listening on PORT %d", config.Port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%d", config.Port), r))
 }
