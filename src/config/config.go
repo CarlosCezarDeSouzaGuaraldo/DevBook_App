@@ -15,6 +15,9 @@ var (
 
 	//Port is the database PORT
 	Port = 0
+
+	//SecretKey is the key to assigned the token
+	SecretKey []byte
 )
 
 // Load will load the enviroment variables
@@ -35,5 +38,6 @@ func Load() {
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),
 	)
-	
+
+	SecretKey = []byte(os.Getenv("SECRET_KEY"))
 }

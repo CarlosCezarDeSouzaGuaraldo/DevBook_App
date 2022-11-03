@@ -130,3 +130,22 @@ func (respository Users) DeleteUser(ID uint64) error {
 
 	return nil
 }
+
+// FindByEmail is a method to GET user by email
+func (repository Users) FindByEmail(email string) (models.User, error) {
+	data, err := repository.db.Query("SELECT id, password FROM users WHERE email = ?", email)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer data.Close()
+
+	var user models.User
+
+	if data.Next() {
+		if err = data.Scan(&user.ID, &user.Password); err != nil {
+			return models.User{}, err
+		}
+	}
+
+	return user, nil
+}
