@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -13,7 +14,10 @@ var (
 	//ConnectionString is the database connection
 	ConnectionString = ""
 
-	//Port is the database PORT
+	// Host is the app HOST
+	Host = ""
+
+	//Port is the app PORT
 	Port = 0
 
 	//SecretKey is the key to assigned the token
@@ -26,6 +30,11 @@ func Load() {
 
 	if err = godotenv.Load(); err != nil {
 		log.Fatal(err)
+	}
+
+	Host = os.Getenv("API_HOST")
+	if len(strings.TrimSpace(Host)) == 0 {
+		Host = "localhost"
 	}
 
 	Port, err = strconv.Atoi(os.Getenv("API_PORT"))
