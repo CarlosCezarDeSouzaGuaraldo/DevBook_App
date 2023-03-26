@@ -31,6 +31,8 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	publication.AuthorID = userID
+
 	db, err := database.Connect()
 	if err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
@@ -39,7 +41,13 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repository := repositories.NewPublicationRepository(db)
-	repository.Create()
+	publication.ID, err = repository.Create(publication)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusCreated, publication)
 }
 
 // CreatePublications find the publications on database
