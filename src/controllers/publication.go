@@ -9,6 +9,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // CreatePublication add a new publication on database
@@ -33,6 +36,11 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 
 	publication.AuthorID = userID
 
+	if err = publication.Prepare(); err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
 	db, err := database.Connect()
 	if err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
@@ -50,14 +58,35 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusCreated, publication)
 }
 
-// CreatePublications find the publications on database
-func CreatePublications(w http.ResponseWriter, r *http.Request) {
+// GetPublications find the publications on database
+func GetPublications(w http.ResponseWriter, r *http.Request) {
 
 }
 
 // GetPublication get one publication on database
 func GetPublication(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	publicationID, err := strconv.ParseUint(params["publicationId"], 10, 64)
+	if err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
 
+	db, err := database.Connect()
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repositories.NewPublicationRepository(db)
+	publication, err := repository.FindPublicationByID(publicationID)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, publication)
 }
 
 // UpdatePublication update one publication on database

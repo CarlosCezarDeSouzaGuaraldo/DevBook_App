@@ -15,7 +15,7 @@ var routePublicatons = []Route{
 	{
 		URI:            "/publications",
 		Method:         http.MethodGet,
-		Func:           controllers.GetPublication,
+		Func:           controllers.GetPublications,
 		AuthIsRequired: true,
 	},
 	{
