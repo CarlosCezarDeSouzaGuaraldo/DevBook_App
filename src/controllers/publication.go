@@ -60,7 +60,26 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 
 // GetPublications find the publications on database
 func GetPublications(w http.ResponseWriter, r *http.Request) {
+	userID, err := auth.ExtractUserID(r)
+	if err != nil {
+		responses.Error(w, http.StatusUnauthorized, err)
+	}
 
+	db, err := database.Connect()
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repositories.NewPublicationRepository(db)
+	publications, err := repository.FindPublications(userID)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, publications)
 }
 
 // GetPublication get one publication on database
