@@ -107,3 +107,17 @@ func (repository Publications) FindPublicationByID(publicationID uint64) (models
 
 	return publication, nil
 }
+
+func (repository Publications) UpdatePublication(publicationID uint64, publication models.Publication) error {
+	statement, err := repository.db.Prepare(`UPDATE publications SET title = ?, content = ? WHERE id = ?`)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(publication.Title, publication.Content, publicationID); err != nil {
+		return err
+	}
+
+	return nil
+}
