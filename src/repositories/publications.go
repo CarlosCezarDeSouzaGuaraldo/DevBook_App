@@ -187,3 +187,25 @@ func (repository Publications) LikePublication(publicationID uint64) error {
 
 	return nil
 }
+
+// UnlikePublication get all publications from a specific user
+func (repository Publications) UnlikePublication(publicationID uint64) error {
+	statement, err := repository.db.Prepare(
+		`UPDATE publications SET likes = 
+		CASE
+			WHEN likes > 0 THEN likes - 1
+			ELSE 0
+		END
+		WHERE id = ?`,
+	)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(publicationID); err != nil {
+		return err
+	}
+
+	return nil
+}

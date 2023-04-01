@@ -234,7 +234,7 @@ func GetUserPublications(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusNoContent, publications)
 }
 
-// LikePublication add a like on the publication
+// LikePublication add one like on the publication
 func LikePublication(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	publicationID, err := strconv.ParseUint(params["publicationId"], 10, 64)
@@ -252,6 +252,31 @@ func LikePublication(w http.ResponseWriter, r *http.Request) {
 
 	repository := repositories.NewPublicationRepository(db)
 	if err = repository.LikePublication(publicationID); err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusNoContent, nil)
+}
+
+// UnlikePublication remove one like on the publication
+func UnlikePublication(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	publicationID, err := strconv.ParseUint(params["publicationId"], 10, 64)
+	if err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repositories.NewPublicationRepository(db)
+	if err = repository.UnlikePublication(publicationID); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
