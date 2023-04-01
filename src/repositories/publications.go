@@ -172,3 +172,18 @@ func (repository Publications) FindPublicationByUserID(userID uint64) ([]models.
 
 	return publications, nil
 }
+
+// LikePublication get all publications from a specific user
+func (repository Publications) LikePublication(publicationID uint64) error {
+	statement, err := repository.db.Prepare(`UPDATE publications SET likes = likes + 1 WHERE id = ?`)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	if _, err := statement.Exec(publicationID); err != nil {
+		return err
+	}
+
+	return nil
+}
