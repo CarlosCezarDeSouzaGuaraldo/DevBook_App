@@ -204,4 +204,6 @@ func DeletePublication(w http.ResponseWriter, r *http.Request) {
 		responses.Error(w, http.StatusForbidden, err)
 		return
 	}
+
+	responses.JSON(w, http.StatusNoContent, nil)
 }
