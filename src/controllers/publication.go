@@ -231,7 +231,7 @@ func GetUserPublications(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusNoContent, publications)
+	responses.JSON(w, http.StatusOK, publications)
 }
 
 // LikePublication add one like on the publication

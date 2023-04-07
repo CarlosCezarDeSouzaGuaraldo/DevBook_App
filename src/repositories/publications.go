@@ -140,7 +140,7 @@ func (repository Publications) DeletePublication(publicationID uint64) error {
 // FindPublicationByUserID get all publications from a specific user
 func (repository Publications) FindPublicationByUserID(userID uint64) ([]models.Publication, error) {
 	rows, err := repository.db.Query(
-		`SELECT p.*
+		`SELECT p.*, u.nick
 		FROM publications p INNER JOIN users u ON u.id = p.author_id
 		WHERE p.author_id = ?`,
 		userID,
