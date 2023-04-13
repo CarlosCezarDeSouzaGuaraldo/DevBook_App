@@ -1,4 +1,4 @@
-# DevBook_Web
+# DevBook_App
 
 DevBook is a social network developed in the Go programming language, where users can create their profiles, make posts and follow other users. These three use cases form the core of the application, while DevBook_App is the server-side application responsible for processing and persisting data in a database from requests made by the [DevBook_Web](https://github.com/CarlosCezarDeSouzaGuaraldo/DevBook_Web) client.
 
